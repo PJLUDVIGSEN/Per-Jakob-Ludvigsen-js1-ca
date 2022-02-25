@@ -2,7 +2,6 @@ const container = document.querySelector(".container");
 
 var options = {
   method: "GET",
-  url: "https://vaccovid-coronavirus-vaccine-and-treatment-tracker.p.rapidapi.com/api/npm-covid-data/",
   headers: {
     "x-rapidapi-host":
       "vaccovid-coronavirus-vaccine-and-treatment-tracker.p.rapidapi.com",
@@ -13,29 +12,32 @@ var options = {
 const api =
   "https://vaccovid-coronavirus-vaccine-and-treatment-tracker.p.rapidapi.com/api/npm-covid-data/";
 
-async function fetchStats() {
+async function fetchCountry() {
   try {
     const response = await fetch(api, options);
     const json = await response.json();
     const covidInfo = json;
-    console.log(covidInfo);
+    container.innerHTML = "";
     for (let i = 0; i <= covidInfo.length; i++) {
-      console.log(covidInfo[i].Country);
-      if (covidInfo[i].Country === "World" || covidInfo[i].Country === "Total:") {
+      if (
+        covidInfo[i].Country === "World" ||
+        covidInfo[i].Country === "Total:"
+      ) {
         continue;
       }
       container.innerHTML += `<div class="country">
-                              <p>Country: ${covidInfo[i].Country}</p>
+                              <h4>Country: ${covidInfo[i].Country}</h4>
                               <p>Continent: ${covidInfo[i].Continent}</p> 
-                              <p>Activecases: ${covidInfo[i].ActiveCases}</p>
+                              <p>Current cases: ${covidInfo[i].ActiveCases}</p>
                               <a class="button" href="details.html?ThreeLetterSymbol=${covidInfo[i].ThreeLetterSymbol}">More info</a>
                               </div>`;
-      if (i === 11) {
-      break;
+      if (i === 10) {
+        break;
       }
     }
   } catch (error) {
-    console.log("The error is: " +  error)
+    console.log("The error is: " + error);
+    container.innerHTML += `<div class="error">An error has occured: ${error}</div>`;
   }
 }
-fetchStats();
+fetchCountry();
